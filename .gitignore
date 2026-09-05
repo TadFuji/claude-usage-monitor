@@ -1,0 +1,11 @@
+.DS_Store
+* ([0-9]).*
+
+# Build products: .build is ~69M, and the .app is reassembled by build.sh
+# on every run, so tracking it turns each build into a binary diff.
+.build/
+Claude Usage Monitor.app/
+
+# Local working notes and agent bookkeeping, not part of the project.
+.claude/
+handoff.md

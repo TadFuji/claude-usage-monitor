@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Nothing here writes to the repository; checkout still needs to read it.
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Test on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        # No runner image exists for macOS 13, the deployment target, so the
+        # oldest available is the floor. macos-14 is deliberately absent: it
+        # enters brownouts in October 2026 and is unsupported from November.
+        os: [macos-15, macos-latest]
+    steps:
+      # Pinned to a commit so a moved tag cannot change what runs here.
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - run: swift --version
+      - name: Run tests
+        run: swift test
+      - name: Assemble the .app bundle
+        # build.sh, not just `swift build`: it is where a stale file reference
+        # or a missing resource would show up.
+        run: ./build.sh
+
+  format:
+    name: Format
+    # Needs Swift 6.0 or newer for the `swift format` subcommand.
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      # swift-format ships with the toolchain, so there is nothing to install.
+      - name: Check formatting
+        run: swift format lint --strict --recursive --configuration .swift-format Sources Tests Package.swift

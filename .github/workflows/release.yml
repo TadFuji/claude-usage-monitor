@@ -1,0 +1,56 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      # A tag that cannot build is not a release.
+      - name: Run tests
+        run: swift test
+
+      - name: Assemble the .app bundle
+        run: ./build.sh
+
+      - name: Package the app
+        env:
+          TAG: ${{ github.ref_name }}
+        # ditto, not zip: it preserves the bundle's resource forks and symlinks.
+        run: ditto -c -k --keepParent "Claude Usage Monitor.app" "claude-usage-monitor-$TAG.zip"
+
+      - name: Write the release notes
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          cat > release-notes.md <<'NOTES'
+          See the [changelog](https://github.com/TadFuji/claude-usage-monitor/blob/main/CHANGELOG.md) for what changed.
+
+          ### About the attached build
+
+          The zip below is **unsigned and un-notarized**, so macOS will quarantine
+          it: after unzipping you have to allow it once under **System Settings →
+          Privacy & Security**. Building from source avoids that entirely and takes
+          about ten seconds:
+
+          ```bash
+          ./build.sh && cp -R "Claude Usage Monitor.app" /Applications/
+          ```
+          NOTES
+
+      - name: Publish the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          gh release create "$TAG" \
+            --title "$TAG" \
+            --notes-file release-notes.md \
+            "claude-usage-monitor-$TAG.zip"

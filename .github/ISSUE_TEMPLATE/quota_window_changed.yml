@@ -1,0 +1,47 @@
+name: A quota window looks wrong or is missing
+description: The API added, renamed, or retired a window and the app has not caught up
+labels: ["upstream-drift"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The usage endpoint is undocumented and its shape drifts — windows get
+        added and retired without notice. This is the most likely reason a ring
+        disappears, shows an unfamiliar label, or reports a number you do not
+        recognise.
+
+        Please do not paste a raw API response: it identifies your account.
+        Describing the shape is enough.
+
+  - type: dropdown
+    id: symptom
+    attributes:
+      label: What happened?
+      options:
+        - A ring disappeared
+        - A new ring appeared with an unhelpful label
+        - A ring shows a percentage that looks wrong
+        - The popover says there are no windows to show
+    validations:
+      required: true
+
+  - type: input
+    id: label
+    attributes:
+      label: What label does the ring show?
+      description: The caption under the ring, if there is one.
+      placeholder: "週(限定) / 不明 / weekly_something_new"
+
+  - type: textarea
+    id: shape
+    attributes:
+      label: What does the response look like now?
+      description: >
+        If you inspected it, list only the `kind` values you saw and whether
+        each carried a `percent` — no tokens, no account identifiers, no full
+        payload.
+      placeholder: |
+        session (percent present)
+        weekly_all (percent present)
+        weekly_scoped (percent missing, no display_name)
+      render: text

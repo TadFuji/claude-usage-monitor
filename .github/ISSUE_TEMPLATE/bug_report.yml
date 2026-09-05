@@ -1,0 +1,67 @@
+name: Bug report
+description: Something in the app behaves differently than it should
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please do not paste an access token, a Keychain dump, or a full API
+        response here. If the problem could expose a credential, follow
+        [SECURITY.md](../blob/main/SECURITY.md) instead.
+
+  - type: input
+    id: macos
+    attributes:
+      label: macOS version
+      placeholder: "14.6.1"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: auth
+    attributes:
+      label: How is your Claude Code CLI authenticated?
+      description: >
+        The app reads the Keychain item that only a subscription login writes.
+        API key, Bedrock, and Vertex setups do not have it.
+      options:
+        - Subscription login (`claude` → `/login`)
+        - API key (ANTHROPIC_API_KEY)
+        - Amazon Bedrock
+        - Google Vertex AI
+        - Not sure
+    validations:
+      required: true
+
+  - type: input
+    id: menubar
+    attributes:
+      label: What does the menu bar show?
+      description: The glyph and its colour, or the text if no glyph appears.
+      placeholder: "grey asterisk / C-- / nothing at all"
+    validations:
+      required: true
+
+  - type: textarea
+    id: message
+    attributes:
+      label: What does the popover say?
+      description: >
+        Click the menu bar item and copy the message shown there, if any.
+      render: text
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect instead?
+    validations:
+      required: true
+
+  - type: textarea
+    id: cli
+    attributes:
+      label: Does the CLI itself work?
+      description: >
+        Run `claude -p 'reply with exactly: ok' --model haiku` in Terminal and
+        paste the result. If that fails, the app cannot succeed either.
+      render: shell
