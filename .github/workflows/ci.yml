@@ -26,7 +26,7 @@ jobs:
         os: [macos-15, macos-latest]
     steps:
       # Pinned to a commit so a moved tag cannot change what runs here.
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - run: swift --version
       - name: Run tests
         run: swift test
@@ -40,7 +40,7 @@ jobs:
     # Needs Swift 6.0 or newer for the `swift format` subcommand.
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       # swift-format ships with the toolchain, so there is nothing to install.
       - name: Check formatting
         run: swift format lint --strict --recursive --configuration .swift-format Sources Tests Package.swift
