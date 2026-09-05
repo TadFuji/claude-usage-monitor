@@ -11,6 +11,7 @@ Keychain, so there is nothing to log into and no token to paste.
 > **Unofficial.** This project is not affiliated with, endorsed by, or
 > supported by Anthropic. It reads an endpoint that is not part of any
 > documented public API, so it can change or stop working without notice.
+> It will be taken down at Anthropic's request.
 
 The menu bar shows an asterisk tinted by the remaining quota of your current
 session window — green from 60% up, yellow from 40 to 59%, red below 40%.
@@ -139,7 +140,7 @@ Claude Code CLI がキーチェーンに保存した認証情報をそのまま�
 
 > **非公式です。** Anthropic とは無関係で、同社の承認も支援も受けていません。
 > 公開されていないエンドポイントを読んでいるため、予告なく動かなくなる可能性が
-> あります。
+> あります。Anthropic から要請があれば取り下げます。
 
 メニューバーには、現在のセッション枠の残量に応じて色の変わるアスタリスクが出ます
 （60%超は緑、40〜59%は黄、40%未満は赤）。クリックすると、API が返す枠ごと
